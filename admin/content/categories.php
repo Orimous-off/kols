@@ -5,8 +5,8 @@ ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
 ini_set('session.use_strict_mode', 1);
 
-include ROOT_PATH . '/includes/db.php';
-include ROOT_PATH . '/includes/auth.php';
+include ROOT_PATH . '/../includes/db.php';
+include ROOT_PATH . '/../includes/auth.php';
 global $pdo;
 $auth = new Auth($pdo);
 
@@ -15,6 +15,13 @@ if (!$auth->isAdmin()) {
     header('Location: /login');
     exit;
 }
+
+// Fetch all categories
+$stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch categories for parent category dropdown (excluding self for edits)
+$parent_categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt = $pdo->query("SELECT * FROM company_info LIMIT 1");
 $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,7 +32,7 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Админ-панель</title>
+    <title>Админ-панель - Категории</title>
     <link rel="apple-touch-icon" href="/assets<?php echo $companyInfo['logo']?>" sizes="180x180">
     <link rel="icon" href="/assets<?php echo $companyInfo['logo']?>">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
@@ -79,13 +86,12 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
         <h1 class="text-white text-xl font-semibold">Админ-панель</h1>
     </div>
     <nav class="text-gray-300">
-        <div class="menu-item active">
+        <div class="menu-item">
             <a href="/admin" class="flex items-center px-4 py-3">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Панель управления</span>
             </a>
         </div>
-        <!-- Контент -->
         <div class="menu-group">
             <div class="menu-item">
                 <a href="#" class="flex items-center justify-between px-4 py-3">
@@ -102,9 +108,8 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </div>
-        <!-- Каталог -->
         <div class="menu-group">
-            <div class="menu-item">
+            <div class="menu-item active">
                 <a href="#" class="flex items-center justify-between px-4 py-3">
                     <div>
                         <i class="fas fa-shopping-cart w-6"></i>
@@ -114,19 +119,17 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
                 </a>
                 <div class="submenu">
                     <a href="/admin-products" class="block px-8 py-2 hover:bg-gray-700">Товары</a>
-                    <a href="/admin-ategories" class="block px-8 py-2 hover:bg-gray-700">Категории</a>
+                    <a href="/admin-categories" class="block px-8 py-2 hover:bg-gray-700">Категории</a>
                     <a href="/admin-manufacturers" class="block px-8 py-2 hover:bg-gray-700">Производители</a>
                 </div>
             </div>
         </div>
-        <!-- Заказы -->
         <div class="menu-item">
             <a href="/admin-orders" class="flex items-center px-4 py-3">
                 <i class="fas fa-shopping-basket w-6"></i>
                 <span>Заказы</span>
             </a>
         </div>
-        <!-- Настройки -->
         <div class="menu-group">
             <div class="menu-item">
                 <a href="#" class="flex items-center justify-between px-4 py-3">
@@ -149,7 +152,80 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 <!-- Основной контент -->
 <main class="admin-content pt-12">
     <div class="p-6">
-        <?php include "dashboard.php"; ?>
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h2 class="text-2xl font-semibold mb-6">Редактирование категорий</h2>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    <?php echo htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                </div>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                    <?php echo htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Форма добавления новой категории -->
+            <div class="mb-8">
+                <h3 class="text-lg font-medium mb-4">Добавить новую категорию</h3>
+                <form action="/admin/api/categories.php" method="post" id="add-category-form">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-4">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Название</label>
+                        <input type="text" id="name" name="name" required
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Описание</label>
+                        <textarea id="description" name="description"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit"
+                                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Добавить категорию
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Список категорий -->
+            <div>
+                <h3 class="text-lg font-medium mb-4">Существующие категории</h3>
+                <?php if (empty($categories)): ?>
+                    <p class="text-gray-600">Нет категорий.</p>
+                <?php else: ?>
+                    <div class="space-y-2">
+                        <?php foreach ($categories as $category): ?>
+                            <div class="border border-gray-200 rounded-md p-4">
+                                <form action="/admin/api/categories.php" method="post" class="edit-category-form">
+                                    <input type="hidden" name="action" value="edit">
+                                    <input type="hidden" name="category_id" value="<?php echo $category['category_id']; ?>">
+                                    <div class="mb-3">
+                                        <label for="name_<?php echo $category['category_id']; ?>" class="block text-sm font-medium text-gray-700 mb-2">Название</label>
+                                        <input type="text" id="name_<?php echo $category['category_id']; ?>" name="name" required
+                                               value="<?php echo htmlspecialchars($category['name']); ?>"
+                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="description_<?php echo $category['category_id']; ?>" class="block text-sm font-medium text-gray-700 mb-2">Описание</label>
+                                        <textarea id="description_<?php echo $category['category_id']; ?>" name="description"
+                                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"><?php echo htmlspecialchars($category['description'] ?? ''); ?></textarea>
+                                    </div>
+                                    <div class="flex justify-end space-x-2">
+                                        <button type="submit"
+                                                class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            Сохранить изменения
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 </main>
 <script>
@@ -163,34 +239,6 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             }
         });
     });
-
-    // Обработка форм через AJAX
-   /* document.querySelectorAll('.ori').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: form.method,
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    showNotification('success', result.message);
-                    if (result.reload) {
-                        location.reload();
-                    }
-                } else {
-                    showNotification('error', result.message);
-                }
-            } catch (error) {
-                showNotification('error', 'Произошла ошибка при выполнении запроса');
-            }
-        });
-    });*/
 
     // Уведомления
     function showNotification(type, message) {

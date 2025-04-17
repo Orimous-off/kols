@@ -35,7 +35,7 @@ global $pdo;
             </a>
         </div>
     </section>
-    <section>
+    <section class="catalog-section">
         <div class="container">
             <div class="row align-items-center justify-content-sb">
                 <h2>Наш каталог</h2>
@@ -66,7 +66,7 @@ global $pdo;
             $stmt = $pdo->query($sql);
             $productsItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
             ?>
-            <div class="row gap-30 f-wrap justify-content-sb pt-25">
+            <div class="row gap-30 f-wrap justify-content-sb pt-25 lg:justify-content-center catalog">
                 <?php foreach ($productsItems as $productItem): ?>
                     <div class="product-card">
                         <div class="row justify-content-end w100">
@@ -86,7 +86,7 @@ global $pdo;
                         <a href="/product?id=<?= $productItem['product_id']; ?>">
                             <img src="assets/<?= $productItem['main_image_path'] ?>" alt="" class="catalog-main-img">
                         </a>
-                        <div class="row align-items-center justify-content-sb w100">
+                        <div class="row align-items-center justify-content-sb w100 product-info-price">
                             <div class="col">
                                 <a href="/product?id=<?= $productItem['product_id']; ?>" class="product-name"><?= $productItem['product_name']; ?></a>
                                 <span class="product-price">
@@ -128,7 +128,7 @@ global $pdo;
     <section class="quality-section">
         <div class="container">
             <h2>Качетсво мебели</h2>
-            <div class="row justify-content-sb pt-25 f-wrap">
+            <div class="row justify-content-sb pt-25 f-wrap quality-flex">
                 <div class="col justify-content-sb">
                     <img src="assets/images/quality-1.jpg" alt="">
                     <p>
@@ -195,7 +195,7 @@ global $pdo;
             $stmtDiscounted = $pdo->query($sqlDiscounted);
             $discountedProducts = $stmtDiscounted->fetchAll(PDO::FETCH_ASSOC);
             ?>
-            <div class="row gap-30 justify-content-center f-wrap pt-25">
+            <div class="row gap-30 justify-content-center f-wrap pt-25 catalog">
                 <?php foreach ($discountedProducts as $discountedProduct): ?>
                     <div class="product-card">
                         <div class="row justify-content-end w100">
@@ -215,7 +215,7 @@ global $pdo;
                         <a href="/product?id=<?= $discountedProduct['product_id']; ?>">
                             <img src="assets/<?= $discountedProduct['main_image_path'] ?>" alt="" class="catalog-main-img">
                         </a>
-                        <div class="row align-items-center justify-content-sb w100">
+                        <div class="row align-items-center justify-content-sb w100 product-info-price">
                             <div class="col">
                                 <a href="/product?id=<?= $discountedProduct['product_id']; ?>" class="product-name"><?= $discountedProduct['product_name']; ?></a>
                                 <span class="product-price">
@@ -273,7 +273,7 @@ global $pdo;
     </section>
     <section class="advantages">
         <div class="container">
-            <div class="row gap-30 align-items-stretch text-center">
+            <div class="row gap-30 align-items-stretch text-center md:f-wrap lg:justify-content-center">
                 <?php
                 $stmt = $pdo->query("SELECT * FROM advantages");
                 $advantagesItems = $stmt->fetchAll(PDO::FETCH_ASSOC);

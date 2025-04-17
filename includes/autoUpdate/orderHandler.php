@@ -1,7 +1,7 @@
 <?php
-// includes/autoUpdate/orderHandler.php
 session_start();
 include '../db.php';
+global $pdo;
 
 header('Content-Type: application/json');
 
@@ -41,21 +41,43 @@ try {
         throw new Exception('Корзина не найдена');
     }
 
-    // Calculate total amount
+    // Get cart items with product and color details
     $stmt = $pdo->prepare("
         SELECT 
+            ci.cart_item_id,
+            ci.product_id,
             ci.quantity,
+            ci.color_name,
             p.price,
-            p.discount_percentage
+            p.discount_percentage,
+            p.stock_quantity AS product_stock,
+            pc.stock_quantity AS color_stock
         FROM cart_items ci
         JOIN products p ON ci.product_id = p.product_id
+        LEFT JOIN product_colors pc ON ci.product_id = pc.product_id AND ci.color_name = pc.color_name
         WHERE ci.cart_id = ?
     ");
     $stmt->execute([$cart['cart_id']]);
     $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    if (empty($items)) {
+        throw new Exception('Корзина пуста');
+    }
+
+    // Calculate total amount and validate stock
     $totalAmount = 0;
     foreach ($items as $item) {
+        // Check if enough product stock
+        if ($item['product_stock'] < $item['quantity']) {
+            throw new Exception("Недостаточно товара на складе для продукта ID {$item['product_id']}. Доступно: {$item['product_stock']}, требуется: {$item['quantity']}");
+        }
+
+        // Check if enough color stock (if color is specified)
+        if (!empty($item['color_name']) && $item['color_stock'] !== null && $item['color_stock'] < $item['quantity']) {
+            throw new Exception("Недостаточно товара цвета '{$item['color_name']}' для продукта ID {$item['product_id']}. Доступно: {$item['color_stock']}, требуется: {$item['quantity']}");
+        }
+
+        // Calculate price with discount
         $price = $item['price'];
         $discount = $price * ($item['discount_percentage'] / 100);
         $finalPrice = $price - $discount;
@@ -79,6 +101,27 @@ try {
         WHERE ci.cart_id = ?
     ");
     $stmt->execute([$orderId, $cart['cart_id']]);
+
+    // Update stock quantities in products and product_colors
+    foreach ($items as $item) {
+        // Decrease product stock
+        $stmt = $pdo->prepare("
+            UPDATE products 
+            SET stock_quantity = stock_quantity - ? 
+            WHERE product_id = ?
+        ");
+        $stmt->execute([$item['quantity'], $item['product_id']]);
+
+        // Decrease color stock (if color is specified)
+        if (!empty($item['color_name'])) {
+            $stmt = $pdo->prepare("
+                UPDATE product_colors 
+                SET stock_quantity = stock_quantity - ? 
+                WHERE product_id = ? AND color_name = ?
+            ");
+            $stmt->execute([$item['quantity'], $item['product_id'], $item['color_name']]);
+        }
+    }
 
     // Update cart status
     $stmt = $pdo->prepare("UPDATE carts SET status = 'ordered' WHERE cart_id = ?");

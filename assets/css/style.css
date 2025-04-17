@@ -263,7 +263,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-size: cover;
+    background-size: cover !important;
     border-radius: 15px;
 }
 
@@ -300,6 +300,7 @@ h1 {
 }
 
 .round-link {
+    margin-top: 10px;
     height: 96px;
     width: 96px;
     display: flex;
@@ -338,7 +339,7 @@ h1 {
 }
 
 .email-subscription > .container > .col {
-    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
     padding: 50px 40px;
     background: url("../images/subscription.jpg") no-repeat center center;
     background-size: cover;
@@ -437,6 +438,8 @@ h3 {
 }
 
 .product-price {
+    display: flex;
+    flex-direction: column;
     font-size: 14px;
     font-weight: 500;
     color: #505050;
@@ -460,7 +463,8 @@ h3 {
 
 .catalog-main-img {
     max-height: 200px;
-    width: fit-content;
+    width: auto;
+    max-width: 250px;
 }
 
 .reviews-slider {
@@ -802,7 +806,7 @@ h3 {
 
 #about-us {
     padding: 0;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -922,6 +926,51 @@ h3 {
     .container {
         width: 960px;
     }
+    .product-card {
+        width: 300px;
+        height: auto;
+        gap: 5px;
+    }
+    .product-info-price {
+        height: 65px;
+    }
+    .quality-flex {
+        gap: 10px;
+        justify-content: space-around;
+    }
+    .quality-section .col img {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .email-subscription h1 {
+        font-size: 4rem;
+    }
+    .reviews .container .row > img {
+        width: 400px;
+        object-fit: cover;
+    }
+    .reviews h2 {
+        font-size: 2rem;
+    }
+    .reviews-slider {
+        max-width: 520px;
+    }
+    .f-heading {
+        font-size: 2rem;
+    }
+    #about-us h1 {
+        font-size: 40px;
+    }
+    .privacy-policy {
+        font-size: 12px;
+    }
+    #feedback {
+        gap: 10px;
+    }
+    .main-content iframe {
+        width: 100%;
+    }
 }
 
 /* Large (lg) – устройства от 992px */
@@ -929,7 +978,69 @@ h3 {
     .container {
         width: 720px;
     }
-
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .logo {
+        position: static;
+        transform: none;
+        font-size: 93%;
+    }
+    .navbar-menu {
+        order: 1;
+        flex: none;
+    }
+    nav > .row {
+        order: 2;
+    }
+    h1 {
+        font-size: 4rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .reviews .container .row > img {
+        height: 400px;
+        width: 40%;
+    }
+    .reviews-slider {
+        width: 350px;
+    }
+    .lg\:justify-content-center {
+        justify-content: center;
+    }
+    #about-us h1 {
+        width: 100%;
+        font-size: 25px;
+    }
+    .mini-container {
+        width: 100%;
+        margin: 0;
+    }
+    .form-section .card {
+        flex-direction: column;
+    }
+    .card > .col {
+        padding: 20px;
+    }
+    .form-section img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .cart-container {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .product-actions {
+        flex-wrap: wrap;
+        gap: 7px;
+    }
+    .quantity-input {
+        margin: 0 !important;
+    }
 }
 
 /* Medium (md) – устройства от 768px */
@@ -937,7 +1048,117 @@ h3 {
     .container {
         width: 540px;
     }
-
+    .md\:f-wrap {
+        flex-wrap: wrap;
+    }
+    .navbar-menu {
+        display: none;
+    }
+    .md\:d-none {
+        display: none;
+    }
+    .burger-dropdown ul li:nth-child(-n+4) {
+        display: block;
+    }
+    .burger-dropdown ul {
+        margin-top: 0;
+    }
+    h1 {
+        font-size: 3.5rem;
+    }
+    .product-card {
+        width: 250px;
+    }
+    .product-card > a {
+        width: 200px;
+        height: 200px;
+    }
+    .catalog-main-img {
+        max-height: 170px;
+        max-width: 200px;
+    }
+    .catalog {
+        gap: 15px;
+        padding-top: 10px;
+    }
+    .quality-section .row > .col {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        gap: 15px;
+    }
+    .pt-25 {
+        padding-top: 15px;
+    }
+    .quality-section .row > .col:nth-child(2) p {
+        text-align: right;
+    }
+    .email-subscription h1 {
+        font-size: 2.5rem;
+    }
+    .email-subscription > .container > .col {
+        padding: 30px;
+    }
+    .advantages .card {
+        width: 250px;
+        height: auto;
+        gap: 0;
+        justify-content: center;
+    }
+    .card > .col {
+        padding-top: 10px;
+    }
+    .advantages .gap-30 {
+        gap: 15px;
+    }
+    .reviews .container > .row {
+        flex-direction: column;
+    }
+    .reviews .container .row > img {
+        height: 170px;
+        width: 100%;
+    }
+    .reviews .container > .row > .col {
+        padding: 15px;
+    }
+    .footer-content {
+        gap: 7px;
+    }
+    .footer-content > .row:first-child {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    footer form {
+        margin-left: auto;
+    }
+    .footer-content > .row:last-child {
+        flex-direction: column-reverse;
+        gap: 15px;
+    }
+    #about-us h1 {
+        width: 80%;
+    }
+    .md\:justify-content-sa {
+        justify-content: space-around;
+    }
+    .md\:f-wrap {
+        flex-wrap: wrap;
+    }
+    .item-actions {
+        flex-direction: row !important;
+    }
+    .product-page {
+        flex-direction: column;
+        margin-top: 15px;
+    }
+    .product-gallery {
+        width: 100% !important;
+    }
+    .product-details {
+        padding: 0 10px !important;
+        padding-top: 20px !important;
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 576px) {
@@ -945,6 +1166,221 @@ h3 {
         width: 100%;
         padding: 0 16px;
         margin: 0;
+    }
+    .hero .container {
+        width: auto;
+        margin: 0 16px;
+        padding: 0;
+    }
+    h1 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 14px;
+    }
+    nav {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+    }
+    .logo {
+        font-size: 80%;
+    }
+    .quality-section .row > .col {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .quality-section .col img {
+        width: 100%;
+        height: 150px;
+    }
+    .quality-flex .col:nth-child(2)  {
+        flex-direction: column-reverse;
+    }
+    .quality-section .row > .col:nth-child(2) p {
+        text-align: left;
+    }
+    .promo .row:first-child {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .promo .row .row p {
+        font-size: 14px;
+    }
+    .promo .block svg {
+        width: 50px;
+        height: 50px;
+    }
+    .promo .block .round-chip {
+        font-size: 12px;
+        padding: 3px 7px;
+        top: 25%;
+    }
+    .email-subscription > .container > .col {
+        padding: 15px;
+        min-height: 50vh;
+    }
+    :where(footer, .email-subscription) form {
+        width: auto;
+    }
+    .email-subscription h1 {
+        font-size: 2rem;
+    }
+    .advantages .gap-30 {
+        gap: 5px;
+    }
+    .reviews-slider {
+        width: 80vw;
+    }
+    .review-card span {
+        font-size: 16px;
+    }
+    .review-card p {
+        font-size: 14px;
+    }
+    .review-card {
+        width: 75vw;
+    }
+    .footer-content {
+        padding-top: 15px !important;
+    }
+    .footer-logo {
+        font-size: 12px;
+    }
+    .f-heading {
+        font-size: 1rem;
+    }
+    .filter-container select, .price-range {
+        flex-wrap: wrap;
+    }
+    .burger-dropdown {
+        right: 0;
+    }
+    #about-us h1 {
+        width: 100%;
+        font-size: 20px;
+    }
+    #about-us .mini-container .row {
+        flex-direction: column;
+        gap: 5px;
+    }
+    #feedback .row:first-child {
+        flex-direction: column;
+    }
+    #feedback .gap-20 {
+        gap: 7px;
+    }
+    .form-section textarea {
+        width: auto;
+    }
+    .form-section input {
+        width: auto;
+    }
+    .privacy-policy {
+        flex-direction: column;
+        gap: 5px;
+    }
+    .btn {
+        padding: 7px 16px;
+        border-radius: 5px;
+    }
+    .cart-page {
+        padding: 16px !important;
+    }
+    .cart-item {
+        grid-template-columns: 1fr;
+    }
+    .card-header {
+        flex-direction: column;
+    }
+    .product-page {
+        width: auto;
+        padding: 16px 0;
+        margin: 16px;
+    }
+    .product-details h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    .product-details .description {
+        margin-bottom: 7px;
+    }
+    .product-gallery {
+        width: auto !important;
+        padding: 16px 0 !important;
+        margin: 0 16px !important;
+    }
+    .product-main-image {
+        max-width: 250px !important;
+        height: 250px;
+    }
+    .color-select {
+        flex: 1;
+        min-width: auto;
+    }
+    .pricing {
+        margin: 10px 0;
+    }
+    .pricing .price {
+        font-size: 20px;
+    }
+    .product-actions {
+        margin-top: 0;
+    }
+    .product-thumbnails {
+        width: 250px;
+        overflow-x: auto;
+    }
+    .catalog {
+        gap: 5px;
+    }
+    .product-card {
+        width: 45%;
+        padding: 8px;
+        gap: 6px;
+    }
+    .product-card .chip {
+        font-size: 11px;
+        padding: 3px 7px;
+    }
+    .product-card .old-price {
+        margin: 0;
+        font-size: 11px;
+    }
+    .product-price {
+        flex-direction: column-reverse;
+        font-size: 13px;
+        flex-wrap: wrap;
+        flex-direction: row-reverse;
+        gap: 3px;
+        justify-content: flex-end;
+    }
+    .product-card > a {
+        width: 100%;
+        height: 170px;
+    }
+    .catalog-main-img {
+        max-height: 150px;
+        max-width: none;
+        width: 100%;
+    }
+    .product-card .row:first-child {
+        justify-content: flex-start;
+    }
+    .product-name {
+        min-height: 36px;
+        font-size: 13px;
+    }
+    .product-info-price .col {
+        width: 100%;
+    }
+    .product-info-price {
+        height: auto;
+        flex-direction: column;
+        gap: 3px;
+    }
+    .catalog-btn {
+        width: 100%;
+        border-radius: 10px;
     }
 }
 

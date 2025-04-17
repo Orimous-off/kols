@@ -93,8 +93,6 @@ switch($sortBy) {
 
 // Proper GROUP BY to avoid conflicts with ONLY_FULL_GROUP_BY
 
-$sql .= " LIMIT 12";
-
 $stmt = $pdo->prepare($sql);
 
 // Bind Search Parameters
@@ -167,7 +165,7 @@ $productsItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <button type="submit" class="filter-submit">Применить</button>
                     </div>
                 </form>
-                <div class="row gap-30 f-wrap">
+                <div class="row gap-30 f-wrap lg:justify-content-center">
                     <?php foreach ($productsItems as $productItem): ?>
                         <div class="product-card">
                             <div class="row justify-content-end w100">
@@ -187,7 +185,7 @@ $productsItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <a href="/product?id=<?= $productItem['product_id']; ?>">
                                 <img src="assets/<?= $productItem['main_image_path'] ?>" alt="" class="catalog-main-img">
                             </a>
-                            <div class="row align-items-center justify-content-sb w100">
+                            <div class="row align-items-center justify-content-sb w100 product-info-price">
                                 <div class="col">
                                     <a href="/product?id=<?= $productItem['product_id']; ?>" class="product-name"><?= $productItem['product_name']; ?></a>
                                     <span class="product-price">
@@ -219,11 +217,6 @@ $productsItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <?php endforeach;?>
                 </div>
             </div>
-            <?php if(count($productsItems) == 12): ?>
-                <div class="pagination">
-                    <a href="?page=2" class="btn">Показать ещё</a>
-                </div>
-            <?php endif; ?>
         </section>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

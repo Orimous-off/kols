@@ -99,7 +99,7 @@ $totals = $cartPage->calculateTotals($cartItems);
         <?php if (empty($cartItems)): ?>
             <div class="empty-cart">
                 <p>Ваша корзина пуста</p>
-                <img src="assets/images/emty-cart.svg" alt="">
+                <img src="/assets/images/emty-cart.svg" alt="">
                 <a href="/catalog" class="btn">Перейти в каталог</a>
             </div>
         <?php else: ?>
@@ -144,7 +144,6 @@ $totals = $cartPage->calculateTotals($cartItems);
                         </div>
                     <?php endforeach; ?>
                 </div>
-
                 <div class="cart-summary">
                     <h2>Итого</h2>
                     <div class="summary-details">
@@ -249,7 +248,6 @@ $totals = $cartPage->calculateTotals($cartItems);
             color: #aab;
         }
     </style>
-
     <script src="https://unpkg.com/imask"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

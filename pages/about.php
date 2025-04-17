@@ -75,7 +75,7 @@ global $pdo;
                             </div>
                             <textarea name="comment" minlength="10" required placeholder="Ваш вопрос"></textarea>
                         </div>
-                        <div class="row gap-30 align-items-center">
+                        <div class="row gap-30 align-items-center privacy-policy">
                             <p>
                                 <?php echo $formContent['privacy_policy']?>
                             </p>
@@ -90,6 +90,7 @@ global $pdo;
                 </div>
             </div>
         </div>
+        <script src="/assets/js/privacyPolicyParagraph.js"></script>
         <script>
             // Маска для телефона
             document.querySelector('input[name="phone"]').addEventListener('input', function(e) {

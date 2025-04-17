@@ -10,7 +10,7 @@ global $pdo;
             $stmt = $pdo->query("SELECT * FROM company_info LIMIT 1");
             $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             ?>
-            <div class="row w-max justify-content-sb">
+            <div class="row w-max justify-content-sb md:f-wrap md:justify-content-sa">
                 <div class="col">
                     <h3>Телефон</h3>
                     <a href="tel:<?php echo $companyInfo['phone']; ?>" class="icon-link">
@@ -61,7 +61,7 @@ global $pdo;
                             </div>
                             <textarea name="comment" minlength="10" required placeholder="Ваш вопрос"></textarea>
                         </div>
-                        <div class="row gap-30 align-items-center">
+                        <div class="row gap-30 align-items-center privacy-policy">
                             <p>
                                 <?php echo $formContent['privacy_policy']?>
                             </p>
@@ -76,6 +76,7 @@ global $pdo;
                 </div>
             </div>
         </div>
+        <script src="/assets/js/privacyPolicyParagraph.js"></script>
         <script>
             // Маска для телефона
             document.querySelector('input[name="phone"]').addEventListener('input', function(e) {
@@ -102,7 +103,7 @@ global $pdo;
                 e.target.value = formattedNumber;
             });
         </script>
-        <script src="assets/js/feedback.js"></script>
+        <script src="/assets/js/feedback.js"></script>
     </section>
 </div>
 <?php

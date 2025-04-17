@@ -30,7 +30,7 @@ $latestOrders = $db->query("
                 </div>
                 <div class="ml-4">
                     <h3 class="text-gray-500 text-sm">Заказы</h3>
-                    <p class="text-2xl font-semibold"><?php echo $stats['orders']; ?></p>
+                    <p class="text-xl font-semibold"><?php echo $stats['orders']; ?></p>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@ $latestOrders = $db->query("
                 </div>
                 <div class="ml-4">
                     <h3 class="text-gray-500 text-sm">Товары</h3>
-                    <p class="text-2xl font-semibold"><?php echo $stats['products']; ?></p>
+                    <p class="text-xl font-semibold"><?php echo $stats['products']; ?></p>
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@ $latestOrders = $db->query("
                 </div>
                 <div class="ml-4">
                     <h3 class="text-gray-500 text-sm">Пользователи</h3>
-                    <p class="text-2xl font-semibold"><?php echo $stats['users']; ?></p>
+                    <p class="text-xl font-semibold"><?php echo $stats['users']; ?></p>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@ $latestOrders = $db->query("
                 </div>
                 <div class="ml-4">
                     <h3 class="text-gray-500 text-sm">Выручка</h3>
-                    <p class="text-2xl font-semibold"><?php echo number_format($stats['revenue'], 2, '.', ' '); ?> ₽</p>
+                    <p class="text-xl font-semibold"><?php echo number_format($stats['revenue'], 2, '.', ' '); ?> ₽</p>
                 </div>
             </div>
         </div>

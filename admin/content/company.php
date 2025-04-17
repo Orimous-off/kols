@@ -5,8 +5,8 @@ ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1);
 ini_set('session.use_strict_mode', 1);
 
-include ROOT_PATH . '/includes/db.php';
-include ROOT_PATH . '/includes/auth.php';
+include ROOT_PATH . '/../includes/db.php';
+include ROOT_PATH . '/../includes/auth.php';
 global $pdo;
 $auth = new Auth($pdo);
 
@@ -79,7 +79,7 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
         <h1 class="text-white text-xl font-semibold">Админ-панель</h1>
     </div>
     <nav class="text-gray-300">
-        <div class="menu-item active">
+        <div class="menu-item">
             <a href="/admin" class="flex items-center px-4 py-3">
                 <i class="fas fa-tachometer-alt w-6"></i>
                 <span>Панель управления</span>
@@ -114,7 +114,7 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
                 </a>
                 <div class="submenu">
                     <a href="/admin-products" class="block px-8 py-2 hover:bg-gray-700">Товары</a>
-                    <a href="/admin-ategories" class="block px-8 py-2 hover:bg-gray-700">Категории</a>
+                    <a href="/admin-categories" class="block px-8 py-2 hover:bg-gray-700">Категории</a>
                     <a href="/admin-manufacturers" class="block px-8 py-2 hover:bg-gray-700">Производители</a>
                 </div>
             </div>
@@ -128,7 +128,7 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
         <!-- Настройки -->
         <div class="menu-group">
-            <div class="menu-item">
+            <div class="menu-item active">
                 <a href="#" class="flex items-center justify-between px-4 py-3">
                     <div>
                         <i class="fas fa-cog w-6"></i>
@@ -149,7 +149,91 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
 <!-- Основной контент -->
 <main class="admin-content pt-12">
     <div class="p-6">
-        <?php include "dashboard.php"; ?>
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <?php
+            $stmt = $pdo->query("SELECT * FROM company_info LIMIT 1");
+            $company = $stmt->fetch(PDO::FETCH_ASSOC);
+            ?>
+            <h2 class="text-2xl font-semibold mb-6">Редактирование информации о компании</h2>
+
+            <?php if (isset($error)): ?>
+                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
+                    <?php echo htmlspecialchars($error); ?>
+                </div>
+            <?php endif; ?>
+
+            <form action="/admin/api/company.php" method="post" id="main-hero-form">
+                <!--<form action="" class="ori" method="POST" enctype="multipart/form-data" data-ajax>-->
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Название</label>
+                    <input type="text"
+                           id="name"
+                           name="name"
+                           value="<?php echo htmlspecialchars($company['name'] ?? ''); ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Название сайта в шапке</label>
+                    <input type="text"
+                           id="logoName"
+                           name="logoName"
+                           value="<?php echo htmlspecialchars($company['logoName'] ?? ''); ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Почта</label>
+                    <input type="email"
+                           id="email"
+                           name="email"
+                           value="<?php echo htmlspecialchars($company['email'] ?? ''); ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Телефон</label>
+                    <input type="tel"
+                           id="phone"
+                           name="phone"
+                           value="<?php echo htmlspecialchars($company['phone'] ?? ''); ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-4">
+                    <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Почта</label>
+                    <input type="text"
+                           id="address"
+                           name="address"
+                           value="<?php echo htmlspecialchars($company['address'] ?? ''); ?>"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div class="mb-6">
+                    <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Изображение</label>
+                    <?php if (!empty($company['logo'])): ?>
+                        <div class="mb-2">
+                            <img src="/assets<?php echo htmlspecialchars($company['logo']); ?>"
+                                 alt="Текущее изображение"
+                                 class="max-w-md h-auto rounded">
+                        </div>
+                    <?php endif; ?>
+                    <input type="file"
+                           id="image"
+                           name="image_url"
+                           accept=".png,.svg"
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Рекомендуемый размер: 500x500px. Допустимые форматы: SVG, PNG</p>
+                </div>
+
+                <div class="flex justify-end">
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        Сохранить изменения
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </main>
 <script>
@@ -163,34 +247,6 @@ $companyInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             }
         });
     });
-
-    // Обработка форм через AJAX
-   /* document.querySelectorAll('.ori').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-
-            try {
-                const response = await fetch(form.action, {
-                    method: form.method,
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    showNotification('success', result.message);
-                    if (result.reload) {
-                        location.reload();
-                    }
-                } else {
-                    showNotification('error', result.message);
-                }
-            } catch (error) {
-                showNotification('error', 'Произошла ошибка при выполнении запроса');
-            }
-        });
-    });*/
 
     // Уведомления
     function showNotification(type, message) {
